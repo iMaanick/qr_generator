@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = ["imaanick <nickolaytrusov01@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.3"
+uvicorn = {extras = ["standard"], version = "^0.32.0"}
+jinja2 = "^3.1.4"
+qrcode = {extras = ["pil"], version = "^8.0"}
+python-multipart = "^0.0.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Redirect</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        async function updateLink(event) {
+            event.preventDefault();
+            const urlInput = document.getElementById("new_url");
+            const newUrl = urlInput.value || "{{ url }}";
+
+            const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+            if (!urlPattern.test(newUrl)) {
+                urlInput.classList.add("is-invalid");
+                return;
+            } else {
+                urlInput.classList.remove("is-invalid");
+            }
+
+            const response = await fetch(`/qr?url=${encodeURIComponent(newUrl)}`);
+            const data = await response.json();
+
+            document.getElementById("currentUrl").innerText = data.url;
+            document.getElementById("qrCode").src = data.qr_code;
+        }
+    </script>
+</head>
+<body class="bg-light">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card p-4 text-center shadow" style="max-width: 400px;">
+            <h5 class="card-title mb-3">QR Code Redirect Manager</h5>
+            <form id="urlForm" onsubmit="updateLink(event)">
+                <div class="form-group">
+                    <input type="text" id="new_url" name="new_url" class="form-control" placeholder="Enter a valid URL" required>
+                    <div class="invalid-feedback">Please enter a valid URL (https://example.com)</div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Update Link</button>
+            </form>
+            <div class="mt-4">
+                <img id="qrCode" src="{{ qr_code }}" alt="QR Code" class="img-fluid border" style="max-width: 200px;">
+                <p class="small mt-2 text-muted">Current URL: <span id="currentUrl">{{ url }}</span></p>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
